@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: parser.Dockerfile
+    command: ./cmd/wait-for-postgres.sh db
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: spacex
+
+  db:
+    restart: always
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: spacex
